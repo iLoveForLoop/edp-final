@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Profile Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- jQuery and jQuery UI -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .highlight {
+        background-color: #fde68a;
+        transition: background-color 0.3s ease;
+      }
+      .success-popup {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px;
+        background-color: #10b981;
+        color: white;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        transform: translateX(200%);
+        transition: transform 0.4s ease-in-out;
+      }
+      .success-popup.show {
+        transform: translateX(0);
+      }
+      .error {
+        border-color: #ef4444 !important;
+      }
+      .error-text {
+        color: #ef4444;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+      }
+
+      .poppins-regular {
+        font-family: "Poppins", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 poppins-regular">
+    <div class="success-popup" id="successPopup">
+      <div class="flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>Message sent successfully!</span>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+      <!-- Header -->
+      <header class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+          <div class="flex items-center mb-4 md:mb-0">
+            <img
+              src="assets/profile2.png"
+              alt="Profile"
+              class="w-16 h-16 rounded-full mr-4"
+            />
+            <div>
+              <h1 class="text-2xl font-bold text-gray-800" id="profileName">
+                Jeferson Bayking
+              </h1>
+              <p class="text-gray-600" id="profileTitle">Web Developer</p>
+            </div>
+          </div>
+          <div class="theme-toggle">
+            <button
+              id="themeSwitcher"
+              class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+            >
+              <i class="fas fa-moon mr-2"></i>Dark Mode
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Basic Info Section -->
+        <div class="col-span-1 bg-white rounded-lg shadow-md p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Basic Info</h2>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <span class="font-medium text-gray-700">Address:</span>
+              <span id="profileLocation">Pinayagan Sur, Tubigon, Bohol</span>
+            </div>
+            <div>
+              <span class="font-medium text-gray-700">Email:</span>
+              <span id="profileEmail">jefbay110@gmail.com</span>
+            </div>
+            <div>
+              <span class="font-medium text-gray-700">Birthday:</span>
+              <span id="profileBirthday">September 20, 2004</span>
+            </div>
+            <div>
+              <span class="font-medium text-gray-700">Favorite Quote:</span>
+              <p id="profileQuote" class="italic">"It is what it is."</p>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <button
+              id="funFactsToggle"
+              class="w-full px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+            >
+              Show Fun Facts
+            </button>
+            <div
+              id="funFactsContent"
+              class="mt-4 p-4 bg-purple-50 rounded hidden"
+            >
+              <ul
+                class="list-disc list-inside space-y-2 text-gray-900"
+                id="funFactsList"
+              >
+                <li>Can't solve a Rubik's cube</li>
+                <li>Has not visited 17 countries</li>
+                <li>Can code from scratch</li>
+                <li>Never met Elon Musk</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hobbies & Skills Section -->
+        <div class="col-span-1 bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">
+            Hobbies & Skills
+          </h2>
+          <div id="accordion" class="mb-4">
+            <h3 class="cursor-pointer p-3 bg-purple-600 text-white rounded">
+              Hobbies
+            </h3>
+            <div class="p-4">
+              <ul class="hobby-list space-y-2">
+                <li class="flex items-center">
+                  <i class="fas fa-heart mr-2 text-purple-600"></i> Loving
+                </li>
+                <li class="flex items-center">
+                  <i class="fas fa-laptop mr-2 text-purple-600"></i> Programming
+                </li>
+                <li class="flex items-center">
+                  <i class="fas fa-utensils mr-2 text-purple-600"></i> Cooking
+                </li>
+                <li class="flex items-center">
+                  <i class="fas fa-cloud mr-2 text-purple-600"></i>
+                  Overthinking
+                </li>
+                <li class="flex items-center">
+                  <i class="fas fa-camera mr-2 text-purple-600"></i>
+                  Procastinating
+                </li>
+                <li class="flex items-center">
+                  <i class="fas fa-envelope mr-2 text-purple-600"></i>
+                  Cramming
+                </li>
+                <li class="flex items-center">
+                  <i class="fas fa-moon mr-2 text-purple-600"></i>
+                  Sleeping
+                </li>
+                <li class="flex items-center">
+                  <i class="fas fa-fire mr-2 text-purple-600"></i>
+                  Stressing
+                </li>
+              </ul>
+            </div>
+            <h3
+              class="cursor-pointer p-3 bg-purple-600 text-white rounded mt-2"
+            >
+              Technical Skills
+            </h3>
+            <div class="p-4">
+              <div class="space-y-3">
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span>HTML/CSS</span>
+                    <span>90%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded">
+                    <div
+                      class="bg-purple-600 h-2 rounded"
+                      style="width: 90%"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span>JavaScript</span>
+                    <span>85%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded">
+                    <div
+                      class="bg-purple-600 h-2 rounded"
+                      style="width: 85%"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span>Vue</span>
+                    <span>83%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded">
+                    <div
+                      class="bg-purple-600 h-2 rounded"
+                      style="width: 83%"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span>React</span>
+                    <span>75%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded">
+                    <div
+                      class="bg-purple-600 h-2 rounded"
+                      style="width: 75%"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span>Node.js</span>
+                    <span>81%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded">
+                    <div
+                      class="bg-purple-600 h-2 rounded"
+                      style="width: 81%"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span>Laravel</span>
+                    <span>80%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded">
+                    <div
+                      class="bg-purple-600 h-2 rounded"
+                      style="width: 80%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h3
+              class="cursor-pointer p-3 bg-purple-600 text-white rounded mt-2"
+            >
+              Languages
+            </h3>
+            <div class="p-4">
+              <ul class="lang-list space-y-2" id="langList">
+                <li>Bisaya (Native)</li>
+                <li>English (Intermediate)</li>
+                <li>Tagalog (Basic)</li>
+                <li>Java</li>
+                <li>PHP</li>
+                <li>JavaScript</li>
+                <li>Python</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Me Form -->
+        <div class="col-span-1 bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">Contact Me</h2>
+          <form id="contactForm" class="space-y-4">
+            <div>
+              <label for="name" class="block text-gray-700 mb-1">Name</label>
+              <input
+                type="text"
+                id="name"
+                class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
+              />
+              <p class="error-text hidden" id="nameError">
+                Please enter your name
+              </p>
+            </div>
+            <div>
+              <label for="email" class="block text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                id="email"
+                class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
+              />
+              <p class="error-text hidden" id="emailError">
+                Please enter a valid email address
+              </p>
+            </div>
+            <div>
+              <label for="date" class="block text-gray-700 mb-1"
+                >Preferred Contact Date</label
+              >
+              <input
+                type="text"
+                id="contactDate"
+                class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
+              />
+            </div>
+            <div>
+              <label for="message" class="block text-gray-700 mb-1"
+                >Message</label
+              >
+              <textarea
+                id="message"
+                rows="4"
+                class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
+              ></textarea>
+              <p class="error-text hidden" id="messageError">
+                Please enter a message
+              </p>
+            </div>
+            <button
+              type="submit"
+              class="w-full px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+            >
+              Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Random Jokes Section -->
+      <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Random Jokes</h2>
+        <div class="mb-4 flex justify-between items-center">
+          <div>
+            <label class="text-gray-700">Joke Categories:</label>
+            <div class="mt-2 flex flex-wrap gap-2">
+              <button
+                class="joke-category px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+                data-category="Programming"
+              >
+                Programming
+              </button>
+              <button
+                class="joke-category px-3 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition"
+                data-category="General"
+              >
+                Misc
+              </button>
+              <button
+                class="joke-category px-3 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition"
+                data-category="Dad"
+              >
+                Pun
+              </button>
+              <button
+                class="joke-category px-3 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition"
+                data-category="Spooky"
+              >
+                Spooky
+              </button>
+              <button
+                class="joke-category px-3 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition"
+                data-category="Christmas"
+              >
+                Christmas
+              </button>
+            </div>
+          </div>
+          <button
+            id="getJokeButton"
+            class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
+          >
+            <i class="fas fa-random mr-2"></i>Get Random Joke
+          </button>
+        </div>
+        <div id="loadingIndicator" class="text-center py-4 hidden">
+          <i class="fas fa-spinner fa-spin text-purple-600 text-2xl"></i>
+          <p class="mt-2 text-gray-600">Fetching joke...</p>
+        </div>
+        <div id="jokeResults" class="mt-4 text-gray-900">
+          <div class="bg-purple-50 rounded-lg p-6 border-l-4 border-purple-600">
+            <p id="jokeSetup" class="text-lg font-medium mb-2">
+              Click the button above to get a random joke!
+            </p>
+            <p id="jokePunchline" class="text-gray-900 italic"></p>
+            <div class="flex justify-between items-center mt-4">
+              <span id="jokeCategory" class="text-sm text-gray-500"></span>
+            </div>
+          </div>
+          <div id="jokeHistory" class="mt-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              Joke History
+            </h3>
+            <div
+              class="space-y-3 max-h-64 overflow-y-auto"
+              id="jokeHistoryList"
+            >
+              <!-- Joke history will be added here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white py-6 mt-8">
+      <div class="container mx-auto px-4 text-center">
+        <p>&copy; 2025 Jeferson Bayking | Personal Dashboard</p>
+        <div class="flex justify-center mt-4 space-x-4">
+          <a href="#" class="text-gray-300 hover:text-white"
+            ><i class="fab fa-github"></i
+          ></a>
+          <a href="#" class="text-gray-300 hover:text-white"
+            ><i class="fab fa-linkedin"></i
+          ></a>
+          <a href="#" class="text-gray-300 hover:text-white"
+            ><i class="fab fa-twitter"></i
+          ></a>
+          <a href="#" class="text-gray-300 hover:text-white"
+            ><i class="fab fa-instagram"></i
+          ></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      $(document).ready(function () {
+        // Initialize jQuery UI elements
+        $("#accordion").accordion({
+          collapsible: true,
+          heightStyle: "content",
+        });
+
+        $("#contactDate").datepicker({
+          minDate: 0,
+          maxDate: "+2M",
+        });
+
+        // Toggle dark/light mode
+        $("#themeSwitcher").click(function () {
+          $("body").toggleClass("bg-gray-800 text-white");
+          $(".bg-white").toggleClass("bg-gray-700");
+          $(".text-gray-800").toggleClass("text-gray-200");
+          $(".text-gray-700").toggleClass("text-gray-200");
+          $(".text-gray-600").toggleClass("text-gray-400");
+
+          // Change button text and icon
+          if ($(this).html().includes("Dark")) {
+            $(this).html('<i class="fas fa-sun mr-2"></i>Light Mode');
+          } else {
+            $(this).html('<i class="fas fa-moon mr-2"></i>Dark Mode');
+          }
+        });
+
+        // Toggle fun facts
+        $("#funFactsToggle").click(function () {
+          $("#funFactsContent").slideToggle();
+
+          if ($(this).text().includes("Show")) {
+            $(this).text("Hide Fun Facts");
+          } else {
+            $(this).text("Show Fun Facts");
+          }
+        });
+
+        // Event delegation for hobby list items
+        $(".hobby-list").on("click", "li", function () {
+          $(".hobby-list li").removeClass("highlight");
+          $(this).addClass("highlight");
+        });
+
+        // Event delegation for language list items
+        $("#langList").on("click", "li", function () {
+          $("#langList li").removeClass("highlight");
+          $(this).addClass("highlight");
+        });
+
+        // Form validation
+        $("#contactForm").submit(function (e) {
+          e.preventDefault();
+          let isValid = true;
+
+          // Reset error states
+          $(".error").removeClass("error");
+          $(".error-text").addClass("hidden");
+
+          // Validate name
+          const name = $("#name").val().trim();
+          if (name === "") {
+            $("#name").addClass("error");
+            $("#nameError").removeClass("hidden");
+            isValid = false;
+          }
+
+          // Validate email
+          const email = $("#email").val().trim();
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(email)) {
+            $("#email").addClass("error");
+            $("#emailError").removeClass("hidden");
+            isValid = false;
+          }
+
+          // Validate message
+          const message = $("#message").val().trim();
+          if (message === "") {
+            $("#message").addClass("error");
+            $("#messageError").removeClass("hidden");
+            isValid = false;
+          }
+
+          // If everything is valid, show success message
+          if (isValid) {
+            // Show success popup
+            $("#successPopup").addClass("show");
+
+            // Hide success popup after 3 seconds
+            setTimeout(function () {
+              $("#successPopup").removeClass("show");
+            }, 3000);
+
+            // Reset form
+            $("#contactForm")[0].reset();
+          }
+        });
+
+        // Jokes functionality
+        let currentCategory = "Programming";
+        let jokeHistory = [];
+
+        const categoryMap = {
+          Programming: "Programming",
+          Misc: "Misc",
+          Pun: "Pun",
+          Spooky: "Spooky",
+          Christmas: "Christmas",
+        };
+
+        // JokeAPI directly supports these categories
+        const supportedCategories = [
+          "Programming",
+          "Misc",
+          "Pun",
+          "Spooky",
+          "Christmas",
+        ];
+
+        // Switch joke category
+        $(".joke-category").click(function () {
+          $(".joke-category")
+            .removeClass("bg-purple-600 text-white")
+            .addClass("bg-gray-300 text-gray-800");
+          $(this)
+            .removeClass("bg-gray-300 text-gray-800")
+            .addClass("bg-purple-600 text-white");
+          currentCategory = $(this).data("category");
+        });
+
+        // Get random joke from JokeAPI
+        $("#getJokeButton").click(function () {
+          // Show loading
+          $("#loadingIndicator").removeClass("hidden");
+
+          // Construct API URL based on selected category
+          const apiCategory = categoryMap[currentCategory];
+          const apiUrl = `https://v2.jokeapi.dev/joke/${apiCategory}?safe-mode`;
+
+          // Fetch joke from API
+          $.ajax({
+            url: apiUrl,
+            method: "GET",
+            dataType: "json",
+            success: function (response) {
+              // Hide loading
+              $("#loadingIndicator").addClass("hidden");
+
+              let setup, punchline;
+
+              // Handle both single and twopart joke types
+              if (response.type === "single") {
+                setup = response.joke;
+                punchline = "";
+              } else {
+                setup = response.setup;
+                punchline = response.delivery;
+              }
+
+              // Update joke display
+              $("#jokeSetup").text(setup);
+              $("#jokePunchline").text(punchline);
+              $("#jokeCategory").text(`Category: ${response.category}`);
+
+              // Add to history
+              const historyItem = {
+                setup: setup,
+                punchline: punchline,
+                category: response.category,
+                timestamp: new Date(),
+                id: response.id,
+              };
+              jokeHistory.unshift(historyItem);
+
+              // Update history display
+              updateJokeHistory();
+            },
+            error: function (xhr, status, error) {
+              // Hide loading
+              $("#loadingIndicator").addClass("hidden");
+
+              // Show error message
+              $("#jokeSetup").text("Failed to fetch joke");
+              $("#jokePunchline").text("Please try again later.");
+              $("#jokeCategory").text("Error");
+
+              console.error("JokeAPI Error:", error);
+            },
+          });
+        });
+
+        // Update joke history display
+        function updateJokeHistory() {
+          $("#jokeHistoryList").empty();
+
+          // Show up to 5 most recent jokes
+          const recentJokes = jokeHistory.slice(0, 5);
+
+          recentJokes.forEach(function (joke) {
+            const timestamp = joke.timestamp.toLocaleTimeString();
+            const historyItem = `
+              <div class="bg-gray-50 p-3 rounded">
+                <div class="flex justify-between items-start mb-1">
+                  <p class="font-medium">${joke.setup}</p>
+                  <span class="text-xs text-gray-500">${timestamp}</span>
+                </div>
+                <p class="text-gray-600 italic">${joke.punchline}</p>
+                <p class="text-xs text-gray-500 mt-1">Category: ${joke.category}</p>
+              </div>
+            `;
+            $("#jokeHistoryList").append(historyItem);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
