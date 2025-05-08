@@ -4,23 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Personal Profile Dashboard</title>
-    <!-- Tailwind CSS CDN -->
+
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- jQuery and jQuery UI -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css"
     />
-    <!-- Font Awesome -->
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -73,7 +71,6 @@
     </div>
 
     <div class="container mx-auto px-4 py-8">
-      <!-- Header -->
       <header class="bg-white rounded-lg shadow-md p-6 mb-6">
         <div class="flex flex-col md:flex-row items-center justify-between">
           <div class="flex items-center mb-4 md:mb-0">
@@ -101,7 +98,6 @@
       </header>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Basic Info Section -->
         <div class="col-span-1 bg-white rounded-lg shadow-md p-6">
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-semibold text-gray-800">Basic Info</h2>
@@ -149,7 +145,6 @@
           </div>
         </div>
 
-        <!-- Hobbies & Skills Section -->
         <div class="col-span-1 bg-white rounded-lg shadow-md p-6">
           <h2 class="text-xl font-semibold text-gray-800 mb-4">
             Hobbies & Skills
@@ -291,7 +286,6 @@
           </div>
         </div>
 
-        <!-- Contact Me Form -->
         <div class="col-span-1 bg-white rounded-lg shadow-md p-6">
           <h2 class="text-xl font-semibold text-gray-800 mb-4">Contact Me</h2>
           <form id="contactForm" class="space-y-4">
@@ -350,7 +344,6 @@
         </div>
       </div>
 
-      <!-- Random Jokes Section -->
       <div class="bg-white rounded-lg shadow-md p-6 mt-6">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Random Jokes</h2>
         <div class="mb-4 flex justify-between items-center">
@@ -417,9 +410,7 @@
             <div
               class="space-y-3 max-h-64 overflow-y-auto"
               id="jokeHistoryList"
-            >
-              <!-- Joke history will be added here -->
-            </div>
+            ></div>
           </div>
         </div>
       </div>
@@ -445,223 +436,6 @@
       </div>
     </footer>
 
-    <script>
-      $(document).ready(function () {
-        // Initialize jQuery UI elements
-        $("#accordion").accordion({
-          collapsible: true,
-          heightStyle: "content",
-        });
-
-        $("#contactDate").datepicker({
-          minDate: 0,
-          maxDate: "+2M",
-        });
-
-        // Toggle dark/light mode
-        $("#themeSwitcher").click(function () {
-          $("body").toggleClass("bg-gray-800 text-white");
-          $(".bg-white").toggleClass("bg-gray-700");
-          $(".text-gray-800").toggleClass("text-gray-200");
-          $(".text-gray-700").toggleClass("text-gray-200");
-          $(".text-gray-600").toggleClass("text-gray-400");
-
-          // Change button text and icon
-          if ($(this).html().includes("Dark")) {
-            $(this).html('<i class="fas fa-sun mr-2"></i>Light Mode');
-          } else {
-            $(this).html('<i class="fas fa-moon mr-2"></i>Dark Mode');
-          }
-        });
-
-        // Toggle fun facts
-        $("#funFactsToggle").click(function () {
-          $("#funFactsContent").slideToggle();
-
-          if ($(this).text().includes("Show")) {
-            $(this).text("Hide Fun Facts");
-          } else {
-            $(this).text("Show Fun Facts");
-          }
-        });
-
-        // Event delegation for hobby list items
-        $(".hobby-list").on("click", "li", function () {
-          $(".hobby-list li").removeClass("highlight");
-          $(this).addClass("highlight");
-        });
-
-        // Event delegation for language list items
-        $("#langList").on("click", "li", function () {
-          $("#langList li").removeClass("highlight");
-          $(this).addClass("highlight");
-        });
-
-        // Form validation
-        $("#contactForm").submit(function (e) {
-          e.preventDefault();
-          let isValid = true;
-
-          // Reset error states
-          $(".error").removeClass("error");
-          $(".error-text").addClass("hidden");
-
-          // Validate name
-          const name = $("#name").val().trim();
-          if (name === "") {
-            $("#name").addClass("error");
-            $("#nameError").removeClass("hidden");
-            isValid = false;
-          }
-
-          // Validate email
-          const email = $("#email").val().trim();
-          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailPattern.test(email)) {
-            $("#email").addClass("error");
-            $("#emailError").removeClass("hidden");
-            isValid = false;
-          }
-
-          // Validate message
-          const message = $("#message").val().trim();
-          if (message === "") {
-            $("#message").addClass("error");
-            $("#messageError").removeClass("hidden");
-            isValid = false;
-          }
-
-          // If everything is valid, show success message
-          if (isValid) {
-            // Show success popup
-            $("#successPopup").addClass("show");
-
-            // Hide success popup after 3 seconds
-            setTimeout(function () {
-              $("#successPopup").removeClass("show");
-            }, 3000);
-
-            // Reset form
-            $("#contactForm")[0].reset();
-          }
-        });
-
-        // Jokes functionality
-        let currentCategory = "Programming";
-        let jokeHistory = [];
-
-        const categoryMap = {
-          Programming: "Programming",
-          Misc: "Misc",
-          Pun: "Pun",
-          Spooky: "Spooky",
-          Christmas: "Christmas",
-        };
-
-        // JokeAPI directly supports these categories
-        const supportedCategories = [
-          "Programming",
-          "Misc",
-          "Pun",
-          "Spooky",
-          "Christmas",
-        ];
-
-        // Switch joke category
-        $(".joke-category").click(function () {
-          $(".joke-category")
-            .removeClass("bg-purple-600 text-white")
-            .addClass("bg-gray-300 text-gray-800");
-          $(this)
-            .removeClass("bg-gray-300 text-gray-800")
-            .addClass("bg-purple-600 text-white");
-          currentCategory = $(this).data("category");
-        });
-
-        // Get random joke from JokeAPI
-        $("#getJokeButton").click(function () {
-          // Show loading
-          $("#loadingIndicator").removeClass("hidden");
-
-          // Construct API URL based on selected category
-          const apiCategory = categoryMap[currentCategory];
-          const apiUrl = `https://v2.jokeapi.dev/joke/${apiCategory}?safe-mode`;
-
-          // Fetch joke from API
-          $.ajax({
-            url: apiUrl,
-            method: "GET",
-            dataType: "json",
-            success: function (response) {
-              // Hide loading
-              $("#loadingIndicator").addClass("hidden");
-
-              let setup, punchline;
-
-              // Handle both single and twopart joke types
-              if (response.type === "single") {
-                setup = response.joke;
-                punchline = "";
-              } else {
-                setup = response.setup;
-                punchline = response.delivery;
-              }
-
-              // Update joke display
-              $("#jokeSetup").text(setup);
-              $("#jokePunchline").text(punchline);
-              $("#jokeCategory").text(`Category: ${response.category}`);
-
-              // Add to history
-              const historyItem = {
-                setup: setup,
-                punchline: punchline,
-                category: response.category,
-                timestamp: new Date(),
-                id: response.id,
-              };
-              jokeHistory.unshift(historyItem);
-
-              // Update history display
-              updateJokeHistory();
-            },
-            error: function (xhr, status, error) {
-              // Hide loading
-              $("#loadingIndicator").addClass("hidden");
-
-              // Show error message
-              $("#jokeSetup").text("Failed to fetch joke");
-              $("#jokePunchline").text("Please try again later.");
-              $("#jokeCategory").text("Error");
-
-              console.error("JokeAPI Error:", error);
-            },
-          });
-        });
-
-        // Update joke history display
-        function updateJokeHistory() {
-          $("#jokeHistoryList").empty();
-
-          // Show up to 5 most recent jokes
-          const recentJokes = jokeHistory.slice(0, 5);
-
-          recentJokes.forEach(function (joke) {
-            const timestamp = joke.timestamp.toLocaleTimeString();
-            const historyItem = `
-              <div class="bg-gray-50 p-3 rounded">
-                <div class="flex justify-between items-start mb-1">
-                  <p class="font-medium">${joke.setup}</p>
-                  <span class="text-xs text-gray-500">${timestamp}</span>
-                </div>
-                <p class="text-gray-600 italic">${joke.punchline}</p>
-                <p class="text-xs text-gray-500 mt-1">Category: ${joke.category}</p>
-              </div>
-            `;
-            $("#jokeHistoryList").append(historyItem);
-          });
-        }
-      });
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
